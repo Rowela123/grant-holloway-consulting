@@ -1,0 +1,33 @@
+---
+import { site } from '../site';
+const year = 2026;
+---
+<footer class="site-footer">
+  <div class="container foot">
+    <div>
+      <span class="brand-mark" aria-hidden="true"></span>
+      <span class="fname">{site.name}</span>
+      <p class="muted small">{site.role} · {site.location}</p>
+    </div>
+    <div class="foot-links">
+      <a href={`mailto:${site.email}`}>{site.email}</a>
+      <a href={site.linkedin}>LinkedIn</a>
+    </div>
+  </div>
+  <div class="container foot-base">
+    <span class="mono small">© {year} {site.name}</span>
+    <span class="mono small">Wireless network delivery · United States</span>
+  </div>
+</footer>
+
+<style>
+  .site-footer { border-top: 1px solid var(--line); margin-top: 40px; padding-block: 48px 28px; }
+  .foot { display: flex; justify-content: space-between; gap: 28px; flex-wrap: wrap; align-items: flex-start; }
+  .brand-mark { width: 10px; height: 10px; border: 1.5px solid var(--accent); display: inline-block; transform: rotate(45deg); margin-right: 10px; }
+  .fname { font-family: var(--font-display); font-weight: 600; }
+  .small { font-size: 0.82rem; }
+  .foot .small { margin: 10px 0 0; }
+  .foot-links { display: flex; flex-direction: column; gap: 6px; font-family: var(--font-mono); font-size: 0.82rem; }
+  .foot-base { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-top: 36px; padding-top: 20px; border-top: 1px solid var(--line); color: var(--faint); }
+  .foot-base .small { color: var(--faint); }
+</style>

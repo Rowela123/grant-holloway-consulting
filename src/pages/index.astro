@@ -1,0 +1,99 @@
+---
+import Base from '../layouts/Base.astro';
+import SignalHero from '../components/SignalHero.astro';
+import MetricStrip from '../components/MetricStrip.astro';
+import { getCollection } from 'astro:content';
+import { site } from '../site';
+
+const caps = (await getCollection('capabilities')).sort((a, b) => a.data.order - b.data.order);
+const impact = (await getCollection('impact'))
+  .filter((e) => !e.data.draft)
+  .sort((a, b) => a.data.order - b.data.order);
+---
+<Base description={`${site.name} — ${site.role}. Wireless buildout and 4G/5G modernization delivery for carriers, OEMs and tower companies.`}>
+  <SignalHero />
+  <MetricStrip />
+
+  <!-- Capabilities preview -->
+  <section class="pad container">
+    <div class="head reveal">
+      <p class="eyebrow">What I do</p>
+      <h2>Delivery leadership for wireless networks.</h2>
+    </div>
+    <div class="grid grid-2 caps">
+      {caps.map((c) => (
+        <div class="card reveal">
+          <h3>{c.data.title}</h3>
+          <p>{c.data.summary}</p>
+        </div>
+      ))}
+    </div>
+    <a href="/capabilities/" class="btn ghost reveal">All capabilities <span class="arrow">→</span></a>
+  </section>
+
+  <hr class="rule" />
+
+  <!-- Impact preview -->
+  <section class="pad container">
+    <div class="head reveal">
+      <p class="eyebrow">Selected impact</p>
+      <h2>Programs delivered, not just planned.</h2>
+    </div>
+    <div class="impact-list">
+      {impact.map((e, i) => (
+        <a href="/impact/" class="impact-row reveal">
+          <span class="idx mono">{String(i + 1).padStart(2, '0')}</span>
+          <div class="irow-main">
+            <h3>{e.data.title}</h3>
+            <p class="muted">{e.data.context}</p>
+          </div>
+          <div class="irow-metric">
+            <span class="im-val">{e.data.metric}</span>
+            <span class="im-label mono">{e.data.metricLabel}</span>
+          </div>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-band">
+    <div class="container cta-inner reveal">
+      <div>
+        <p class="eyebrow">Let's talk</p>
+        <h2>Have a delivery problem worth solving?</h2>
+      </div>
+      <a href="/contact/" class="btn btn-primary">Start a conversation <span class="arrow">→</span></a>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .head { margin-bottom: 40px; }
+  .head h2 { max-width: 20ch; }
+  .caps { margin-bottom: 28px; }
+  .ghost { border-color: var(--line); }
+
+  .impact-list { border-top: 1px solid var(--line); }
+  .impact-row {
+    display: grid; grid-template-columns: 44px 1fr auto; gap: 28px; align-items: center;
+    padding: 30px 8px; border-bottom: 1px solid var(--line); color: var(--ink);
+    transition: background .18s, padding-left .18s;
+  }
+  .impact-row:hover { background: var(--surface); padding-left: 18px; }
+  .idx { color: var(--faint); font-size: 0.82rem; }
+  .irow-main h3 { margin-bottom: 4px; }
+  .irow-metric { text-align: right; }
+  .im-val { display: block; font-family: var(--font-display); font-weight: 700; font-size: 1.5rem; color: var(--accent); letter-spacing: -0.02em; }
+  .im-label { font-size: 0.68rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--faint); }
+
+  .cta-band { border-top: 1px solid var(--line); background: var(--surface); }
+  .cta-inner { display: flex; align-items: center; justify-content: space-between; gap: 32px; flex-wrap: wrap; padding-block: clamp(48px, 8vw, 88px); }
+  .cta-inner h2 { max-width: 18ch; }
+
+  @media (max-width: 620px) {
+    .impact-row { grid-template-columns: 32px 1fr; gap: 16px; }
+    .irow-metric { grid-column: 2; text-align: left; margin-top: 6px; }
+    .im-val { font-size: 1.2rem; }
+  }
+</style>

@@ -1,0 +1,72 @@
+---
+import { site } from '../site';
+const path = Astro.url.pathname;
+const isActive = (href) => href === '/' ? path === '/' : path.startsWith(href);
+---
+<header class="site-header">
+  <div class="container nav">
+    <a href="/" class="brand">
+      <span class="brand-mark" aria-hidden="true"></span>
+      {site.name}
+    </a>
+    <button class="nav-toggle" aria-label="Menu" id="navToggle">
+      <span></span><span></span>
+    </button>
+    <nav class="nav-links" id="navLinks">
+      {site.nav.map((l) => (
+        <a href={l.href} class={isActive(l.href) ? 'active' : ''}>{l.label}</a>
+      ))}
+    </nav>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    position: sticky; top: 0; z-index: 20;
+    background: color-mix(in srgb, var(--bg) 82%, transparent);
+    backdrop-filter: saturate(160%) blur(10px);
+    border-bottom: 1px solid var(--line);
+  }
+  .nav { display: flex; align-items: center; justify-content: space-between; height: 70px; }
+  .brand {
+    display: inline-flex; align-items: center; gap: 12px;
+    font-family: var(--font-display); font-weight: 600; font-size: 1.05rem;
+    color: var(--ink); letter-spacing: -0.01em;
+  }
+  .brand:hover { color: var(--ink); }
+  .brand-mark {
+    width: 12px; height: 12px; border: 1.5px solid var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-glow); display: inline-block;
+    transform: rotate(45deg);
+  }
+  .nav-links { display: flex; gap: 30px; }
+  .nav-links a {
+    font-family: var(--font-mono); font-size: 0.8rem; letter-spacing: 0.03em;
+    color: var(--muted);
+  }
+  .nav-links a:hover, .nav-links a.active { color: var(--ink); }
+  .nav-links a.active { color: var(--accent); }
+  .nav-toggle {
+    display: none; flex-direction: column; gap: 5px; background: none;
+    border: 0; cursor: pointer; padding: 8px;
+  }
+  .nav-toggle span { width: 22px; height: 1.5px; background: var(--ink); display: block; }
+
+  @media (max-width: 720px) {
+    .nav-toggle { display: flex; }
+    .nav-links {
+      position: absolute; top: 70px; left: 0; right: 0;
+      flex-direction: column; gap: 0;
+      background: var(--surface); border-bottom: 1px solid var(--line);
+      max-height: 0; overflow: hidden; transition: max-height .25s ease;
+    }
+    .nav-links.open { max-height: 320px; }
+    .nav-links a { padding: 16px 28px; border-top: 1px solid var(--line); font-size: 0.9rem; }
+  }
+</style>
+
+<script>
+  const t = document.getElementById('navToggle');
+  const l = document.getElementById('navLinks');
+  t?.addEventListener('click', () => l?.classList.toggle('open'));
+</script>

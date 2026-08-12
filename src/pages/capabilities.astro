@@ -1,0 +1,60 @@
+---
+import Base from '../layouts/Base.astro';
+import { getCollection } from 'astro:content';
+import { site } from '../site';
+
+const groups = (await getCollection('capabilities')).sort((a, b) => a.data.order - b.data.order);
+---
+<Base title="Capabilities" description={`Capabilities — delivery leadership, 4G/5G modernization, vendor management and team development.`}>
+  <section class="pad-sm container head reveal">
+    <p class="eyebrow">Capabilities</p>
+    <h1>What I bring to a program.</h1>
+    <p class="lede">Fifteen years of wireless delivery, distilled into four areas where I move the needle fastest.</p>
+  </section>
+
+  <section class="container groups">
+    {groups.map((g, i) => (
+      <div class="group reveal">
+        <div class="g-head">
+          <span class="gnum mono">0{i + 1}</span>
+          <div>
+            <h2>{g.data.title}</h2>
+            <p class="muted g-sum">{g.data.summary}</p>
+          </div>
+        </div>
+        <ul class="g-items">
+          {g.data.items.map((it) => (
+            <li><span class="tick" aria-hidden="true"></span>{it}</li>
+          ))}
+        </ul>
+      </div>
+    ))}
+  </section>
+
+  <section class="cta-band">
+    <div class="container cta-inner reveal">
+      <div><p class="eyebrow">Let's talk</p><h2>See where I'd fit on your team?</h2></div>
+      <a href="/contact/" class="btn btn-primary">Start a conversation <span class="arrow">→</span></a>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .head h1 { margin-bottom: 20px; }
+  .groups { display: grid; gap: 0; }
+  .group { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; padding: 44px 0; border-top: 1px solid var(--line); align-items: start; }
+  .group:last-child { border-bottom: 1px solid var(--line); }
+  .g-head { display: flex; gap: 20px; align-items: flex-start; }
+  .gnum { color: var(--accent); font-size: 0.9rem; padding-top: 6px; }
+  .g-sum { margin: 8px 0 0; }
+  .g-items { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+  .g-items li { display: flex; align-items: center; gap: 12px; color: var(--ink); font-size: 0.98rem; }
+  .tick { width: 6px; height: 6px; background: var(--accent); flex: none; transform: rotate(45deg); }
+
+  .cta-band { border-top: 1px solid var(--line); background: var(--surface); margin-top: 40px; }
+  .cta-inner { display: flex; align-items: center; justify-content: space-between; gap: 32px; flex-wrap: wrap; padding-block: clamp(48px, 8vw, 88px); }
+
+  @media (max-width: 760px) {
+    .group { grid-template-columns: 1fr; gap: 22px; }
+  }
+</style>

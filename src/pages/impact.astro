@@ -1,0 +1,71 @@
+---
+import Base from '../layouts/Base.astro';
+import { getCollection } from 'astro:content';
+import { site } from '../site';
+
+const entries = (await getCollection('impact'))
+  .filter((e) => !e.data.draft)
+  .sort((a, b) => a.data.order - b.data.order);
+
+const rendered = await Promise.all(
+  entries.map(async (e) => ({ data: e.data, Content: (await e.render()).Content }))
+);
+---
+<Base title="Impact" description={`Selected engagements — wireless buildout, 4G/5G modernization and delivery turnaround by ${site.name}.`}>
+  <section class="pad-sm container head reveal">
+    <p class="eyebrow">Selected impact</p>
+    <h1>The work, and what it moved.</h1>
+    <p class="lede">A sample of engagements. Details are generalized to protect client confidentiality; the numbers are real.</p>
+  </section>
+
+  <section class="container cases">
+    {rendered.map((e, i) => (
+      <article class="case reveal">
+        <div class="case-head">
+          <span class="cidx mono">{String(i + 1).padStart(2, '0')}</span>
+          <div class="case-metric">
+            <span class="cm-val">{e.data.metric}</span>
+            <span class="cm-label mono">{e.data.metricLabel}</span>
+          </div>
+        </div>
+        <div class="case-body">
+          <p class="ctx mono">{e.data.context}</p>
+          <h2>{e.data.title}</h2>
+          <div class="prose"><e.Content /></div>
+        </div>
+      </article>
+    ))}
+  </section>
+
+  <section class="cta-band">
+    <div class="container cta-inner reveal">
+      <div><p class="eyebrow">Let's talk</p><h2>Want results like these on your program?</h2></div>
+      <a href="/contact/" class="btn btn-primary">Start a conversation <span class="arrow">→</span></a>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .head h1 { max-width: 16ch; margin-bottom: 20px; }
+  .cases { display: flex; flex-direction: column; gap: 0; }
+  .case { display: grid; grid-template-columns: 260px 1fr; gap: 48px; padding: 52px 0; border-top: 1px solid var(--line); }
+  .case:last-child { border-bottom: 1px solid var(--line); }
+  .case-head { display: flex; flex-direction: column; gap: 20px; }
+  .cidx { color: var(--faint); font-size: 0.82rem; }
+  .cm-val { display: block; font-family: var(--font-display); font-weight: 700; font-size: clamp(2.2rem, 4vw, 3.2rem); color: var(--accent); letter-spacing: -0.03em; line-height: 1; }
+  .cm-label { font-size: 0.7rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--faint); margin-top: 10px; display: block; }
+  .ctx { font-size: 0.72rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--accent); margin: 0 0 12px; }
+  .case-body h2 { margin-bottom: 18px; }
+
+  .prose :global(h2) { font-family: var(--font-mono); font-weight: 500; font-size: 0.74rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink); margin: 22px 0 8px; }
+  .prose :global(p) { color: var(--muted); margin: 0 0 14px; }
+
+  .cta-band { border-top: 1px solid var(--line); background: var(--surface); margin-top: 40px; }
+  .cta-inner { display: flex; align-items: center; justify-content: space-between; gap: 32px; flex-wrap: wrap; padding-block: clamp(48px, 8vw, 88px); }
+  .cta-inner h2 { max-width: 18ch; }
+
+  @media (max-width: 760px) {
+    .case { grid-template-columns: 1fr; gap: 22px; padding: 40px 0; }
+    .case-head { flex-direction: row; align-items: baseline; gap: 20px; }
+  }
+</style>

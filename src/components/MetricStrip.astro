@@ -1,0 +1,37 @@
+---
+import { site } from '../site';
+---
+<section class="metrics-wrap">
+  <div class="container">
+    <div class="metrics">
+      {site.metrics.map((m) => (
+        <div class="metric reveal">
+          <div class="mval">{m.value}</div>
+          <div class="mlabel">{m.label}</div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .metrics-wrap { border-block: 1px solid var(--line); background: var(--surface); }
+  .metrics { display: grid; grid-template-columns: repeat(4, 1fr); }
+  .metric { padding: 40px 24px; border-left: 1px solid var(--line); }
+  .metric:first-child { border-left: 0; }
+  .mval {
+    font-family: var(--font-display); font-weight: 700;
+    font-size: clamp(2rem, 4vw, 3rem); letter-spacing: -0.03em; color: var(--ink);
+    line-height: 1;
+  }
+  .mlabel {
+    font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.16em;
+    text-transform: uppercase; color: var(--faint); margin-top: 12px;
+  }
+  @media (max-width: 720px) {
+    .metrics { grid-template-columns: repeat(2, 1fr); }
+    .metric:nth-child(3) { border-left: 0; }
+    .metric { border-top: 1px solid var(--line); }
+    .metric:nth-child(1), .metric:nth-child(2) { border-top: 0; }
+  }
+</style>
