@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://grant-holloway.pages.dev/sitemap.xml
